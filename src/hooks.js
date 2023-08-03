@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 
 export function useFetch(url, options = {}) {
@@ -32,4 +32,40 @@ export function useFetch(url, options = {}) {
         }
     }, [url])
     return { data, isLoading, isError }
+};
+
+
+export function useArray(arr = []) {
+
+    const [array, setArray] = useState(arr)
+
+    function set(param) {
+        setArray(param)
+    }
+    function push(param) {
+        setArray((current) => [...current, param])
+    }
+    function replace(index, element) {
+        setArray(current => {
+            const newArr = current.slice();
+            newArr[index] = element;
+            return newArr;
+        })
+    }
+    function filter(callback) {
+        setArray(current => current.filter(callback));
+    }
+    function remove(param) {
+        setArray((current) => current.filter((item, index) => index !== param));
+    }
+    function clear() {
+        setArray([])
+    }
+    const reset = useCallback(() => {
+        setArray(arr)
+    }, [arr])
+
+    return {
+        array, set, push, replace, filter, remove, clear, reset
+    }
 }
