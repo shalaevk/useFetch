@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useFetch } from "./hooks";
-
-// If the API does not work use these local URLs
-// const URLS = {
-//   USERS: "users.json",
-//   POSTS: "posts.json",
-//   COMMENTS: "comments.json",
-// }
+import { Array } from "./Array";
 
 const URLS = {
   USERS: "https://jsonplaceholder.typicode.com/users",
@@ -32,7 +26,7 @@ function App() {
 
   return (
     <>
-      <div>
+      {/* <div>
         <label>
           <input
             type="radio"
@@ -64,7 +58,8 @@ function App() {
         <h1>Error</h1>
       ) : (
         <pre>{JSON.stringify(data, null, 2)}</pre>
-      )}
+      )} */}
+      <Array />
     </>
   );
 }
