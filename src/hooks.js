@@ -69,3 +69,24 @@ export function useArray(arr = []) {
         array, set, push, replace, filter, remove, clear, reset
     }
 }
+
+
+export function useLocalStorage(key, initialValue) {
+    const [value, setFirstName] = useState(setInitialName);
+
+    function setInitialName() {
+        if (localStorage.getItem(key)) {
+            return localStorage.getItem(key);
+        }
+        if (typeof initialValue === "function") {
+            return initialValue();
+        }
+        return initialValue
+    }
+
+    useEffect(() => {
+        localStorage.setItem(key, value);
+    }, [value])
+
+    return [value, setFirstName]
+}
