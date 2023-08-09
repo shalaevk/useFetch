@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFetch } from "./hooks";
 import { Array } from "./Array";
+import { LocalStorage } from "../localStorage";
 
 const URLS = {
   USERS: "https://jsonplaceholder.typicode.com/users",
@@ -21,9 +22,6 @@ function App() {
   const [url, setUrl] = useState(URLS.USERS);
 
   const { data, isLoading, isError } = useFetch(url);
-
-  console.log("Data:", data, "Error:", isError, "iSLoading:", isLoading);
-
   return (
     <>
       {/* <div>
@@ -59,7 +57,8 @@ function App() {
       ) : (
         <pre>{JSON.stringify(data, null, 2)}</pre>
       )} */}
-      <Array />
+      {/* <Array /> */}
+      <LocalStorage />
     </>
   );
 }
