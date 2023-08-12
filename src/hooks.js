@@ -1,37 +1,63 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useReducer } from "react";
+
+
+function reducer(state, action) {
+    switch (action.type) {
+        case "FETCH_START":
+            return { ...state, isLoading: true, isError: false }
+
+        case "FETCH_ERROR":
+            return { ...state, isError: true, isLoading: false }
+
+        case "FETCH_SUCCESS":
+
+            return { ...state, data: action.payload.value, isLoading: false, isError: false }
+
+
+        default:
+            return state;
+    }
+}
 
 
 export function useFetch(url, options = {}) {
-    const [data, setData] = useState('');
-    const [isError, setIsError] = useState(false)
-    const [isLoading, setIsLoading] = useState(true);
-    const controller = new AbortController();
+
+    const [state, dispatch] = useReducer(reducer, { isError: false, isLoading: true })
+
+
     useEffect(() => {
+        const controller = new AbortController();
+        console.log(controller);
+        dispatch({ type: "FETCH_START" });
+
+
         fetch(url, { signal: controller.signal, ...options })
             .then(res => {
+
                 if (res.ok) {
                     return res.json()
                 }
                 else return Promise.reject(res)
             })
-            .then(resdata => setData(resdata))
+            .then(resdata => {
+                dispatch({
+                    type: "FETCH_SUCCESS", payload: {
+                        value: resdata
+                    }
+                })
+            })
             .catch((error) => {
                 if (error.name === "AbortError") return;
-                setIsError(true);
-                return error
+                dispatch({ type: "FETCH.ERROR" })
             })
-            .finally(() => {
-                if (controller.signal.aborted) return
-                setIsLoading(false);
-            });
+
         return () => {
-            setIsError(false);
-            setIsLoading(true);
-            setData("");
             controller.abort()
+            console.log("Finished");
         }
-    }, [url])
-    return { data, isLoading, isError }
+    }, [url]);
+
+    return { state }
 };
 
 
